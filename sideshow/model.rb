@@ -50,7 +50,7 @@ module Sideshow
             def self.getAll()
                 result = {}
                 Setting.all.each do |s|
-                    result[s.name.to_sym] = Marshal::load(s.value)
+                    result[s.name.to_sym] = s.value
                 end
 
                 result
@@ -58,12 +58,12 @@ module Sideshow
 
             def self.get(name)
                 s = Setting.first(:name => name.to_s)
-                Marshal::load(s.value) unless s.nil?
+                s.value unless s.nil?
             end
 
             def self.set(name, value)
                 s = Setting.first_or_create(:name => name.to_s)
-                s.value = Marshal::dump(value)
+                s.value = value
                 s.save
             end
         end

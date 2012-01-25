@@ -78,7 +78,7 @@ module Sideshow
             resource = Ken.get(params[:resource])
 
             movie = Model::Movie.get(params[:media])
-            priority = Model::Movie.max(:priority, :conditions => ['resource = ?', resource.id]) or 0
+            priority = Model::Movie.max(:priority, :conditions => ['resource = ?', resource.id]) || 0
 
             movie.resource = resource.id
             movie.description = params[:description]
