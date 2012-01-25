@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sideshow</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+        <link rel="stylesheet" href="/static/css/sideshow.css" />
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/sideshow.js"></script>
+    </head>
+    <body>
+        <div data-role="page" class="<%= content_class %>">
+
+            <div data-role="header">
+                <h1><%= title %></h1>
+            </div>
+
+            <div data-role="content">
+                <%= yield %>
+            </div>
+
+            <div data-role="footer" data-position="fixed" data-id="footer">
+                <div data-role="navbar"><ul>
+                    <li><a <% if active == "list" %>class="ui-btn-active" <% end %>href="/" data-icon="home">Movie List</a></li>
+                    <li><a <% if active == "search" %>class="ui-btn-active" <% end %>href="/search" data-icon="search">Search</a></li>
+                    <li><a href="/remote" data-icon="star" data-rel="dialog">Remote</a></li>
+                    <li><a href="/settings" data-icon="gear" data-rel="dialog">Settings</a></li>
+                </ul></div>
+            </div>
+
+        </div>
+    </body>
+</html>

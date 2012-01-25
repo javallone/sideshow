@@ -1,0 +1,21 @@
+<div class="ui-body ui-body-a ui-corner-top">
+    <div class="cover-art"><%= image_tag(program, 200) %></div>
+    <%= summary %>
+    <a href="http://www.freebase.com/view<%= program.id %>">Full Details</a>
+</div>
+
+<div class="ui-grid-a">
+    <div class="ui-block-a">
+        <dl>
+        <% details.each_pair do |k, v| %>
+            <dt><%= k %></dt>
+            <dd><%= v %></dd>
+        <% end %>
+        </dl>
+    </div>
+
+    <div data-movies-for="<%= program.id %>">
+        <%= erb :movie_list, :layout => false, :locals => { :program => program, :movies => movies } %>
+    </div>
+</div>
+

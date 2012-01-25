@@ -1,0 +1,19 @@
+<form action="/doAdd" method="get">
+    <input type="hidden" name="resource" value="<%= resource %>" />
+
+    <div data-role="fieldcontain">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" />
+    </div>
+
+    <div data-role="fieldcontain">
+        <label for="media">Media File</label>
+        <select name="media" id="media">
+            <% unassociated.each do |movie| %>
+                <option value="<%= movie.id %>"><%= movie.file %></option>
+            <% end %>
+        </select>
+    </div>
+
+    <button type="submit" data-icon="add" data-theme="b">Add Media</button>
+</form>

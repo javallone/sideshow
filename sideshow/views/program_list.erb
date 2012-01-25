@@ -1,0 +1,11 @@
+<ul data-role="listview" data-inset="true">
+<% programs.each do |p| %>
+    <li><a href="<%= resource_url(p[:program]) %>">
+        <%= image_tag(p[:program], 100) %>
+        <h2><%= p[:label] %></h2>
+        <p>
+            <%= p[:type] %><% unless p[:release_year].nil? %>, Released <%= p[:release_year] %><% end %>
+        </p>
+    </a></li>
+<% end %>
+</ul>

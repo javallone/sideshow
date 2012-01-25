@@ -1,0 +1,5 @@
+<% if results.length > 0 %>
+    <%= erb :program_list, :layout => false, :locals => { :programs => results } %>
+<% else %>
+    <strong>No results found</strong>
+<% end %>

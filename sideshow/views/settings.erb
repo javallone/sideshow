@@ -1,0 +1,27 @@
+<form action="/updateSettings" method="get">
+    <div data-role="fieldcontain">
+        <label for="media_root">Media Root:</label>
+        <input type="text" name="media_root" id="media_root" value="<%= media_root %>" />
+    </div>
+
+    <div data-role="fieldcontain">
+        <label for="player_cmd">Player Command:</label>
+        <input type="text" name="player_cmd" id="player_cmd" value="<%= player_cmd %>" />
+    </div>
+
+    <div data-role="fieldcontain">
+        <label for="cache_server">Cache Server:</label>
+        <input type="text" name="cache_server" id="cache_server" value="<%= cache_server %>" />
+    </div>
+
+    <div data-role="fieldcontain">
+        <label for="cache_prefix">Cache Prefix:</label>
+        <input type="text" name="cache_prefix" id="cache_prefix" value="<%= cache_prefix %>" />
+    </div>
+
+    <div data-role="controlgroup" data-type="horizontal">
+        <button type="submit" data-theme="b" data-icon="check">Save Settings</button>
+        <a data-role="button" href="/refresh" data-icon="refresh">Refresh Media</a>
+        <a data-role="button" href="/flush" data-icon="alert">Flush Cache</a>
+    </div>
+</form>

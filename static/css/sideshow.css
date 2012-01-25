@@ -1,0 +1,74 @@
+.ui-field-contain label.ui-input-text {
+    vertical-align: middle;
+}
+
+/**** Programs ****/
+
+.program .cover-art {
+    float: left;
+    margin-right: 15px;
+}
+
+.program p {
+    margin-top: 0;
+}
+
+.program dl {
+    clear: both;
+    margin: 0;
+    padding: 15px 0;
+}
+
+.program dl dt {
+    float: left;
+    clear: both;
+    width: 100px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.program dl dd {
+    float: left;
+}
+
+.program dl dd ul {
+    display: inline;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+/**** Settings Panel ****/
+
+.settings .ui-controlgroup {
+    text-align: center;
+}
+
+/**** Remote Control ****/
+
+.remote {
+    text-align: center;
+}
+
+.remote table {
+    margin: 0 auto;
+}
+
+.remote table td {
+    padding: 5px;
+}
+
+.remote table .single a {
+    height: 76px;
+    width: 105px;
+}
+
+.remote table .single a .ui-btn-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -9px;
+    margin-top: -9px;
+    padding: 0;
+}
