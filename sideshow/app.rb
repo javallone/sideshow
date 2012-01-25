@@ -146,7 +146,7 @@ module Sideshow
             end
         end
 
-        get "/updateModel::Settings" do
+        get "/updateSettings" do
             old_values = Model::Setting.getAll
             cache_reconnect = false
 
