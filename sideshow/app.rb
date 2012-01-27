@@ -6,7 +6,6 @@ require "bundler/setup"
 require "sinatra/base"
 
 require "ken"
-require "amatch"
 
 require "net/https"
 require "uri"
@@ -104,29 +103,26 @@ module Sideshow
         get "/doSearch" do
             results = []
             unless params[:search].nil?
-                name_matches = Ken.all("name~=" => params[:search], "type|=" => ["/film/film", "/tv/tv_program"])
-                alias_matches = Ken.all("/common/topic/alias~=" => params[:search], "type|=" => ["/film/film", "/tv/tv_program"])
+                uri = URI.parse("https://www.googleapis.com/freebase/v1/search?mql_output=%7B%22id%22%3A%5B%5D%7D&type=/film/film&type=/tv/tv_program&query=#{URI.encode_www_form_component(params[:search])}")
+                http = Net::HTTP.new(uri.host, uri.port)
+                http.use_ssl = true
+                http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-                results.concat(name_matches)
-                results.concat(alias_matches)
-                results.uniq! { |r| r.id }
+                request = Net::HTTP::Get.new(uri.request_uri)
 
-                matcher = Amatch::Levenshtein.new(params[:search])
+                response = http.request(request)
 
-                results.map! do |r|
-                    names = [r.name]
-                    aliases = r.attribute("/common/topic/alias")
-                    names.concat(aliases.values) unless aliases.nil?
+                scores = {}
+                JSON.parse(response.body)["result"].map do |r|
+                    scores[r["id"][0]] = r["relevance:score"]
+                end
 
-                    { :distance => matcher.match(names).min }.merge(Util.program_info(:program => r))
+                results = Ken.all("id|=" => scores.collect {|k, v| k}).map do |r|
+                    { :score => scores[r.id] }.merge(Util.program_info(:program => r))
                 end
 
                 results.sort! do |a, b|
-                    value = a[:distance] <=> b[:distance]
-                    if value == 0
-                        value = a[:label] <=> b[:label]
-                    end
-                    value
+                    b[:score] <=> a[:score]
                 end
             end
 

@@ -5,6 +5,5 @@ gem "sinatra"
 gem "ken"
 gem "data_mapper"
 gem "dm-sqlite-adapter"
-gem "amatch"
 
 gem "redis"
