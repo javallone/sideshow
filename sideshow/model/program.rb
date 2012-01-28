@@ -14,11 +14,12 @@ module Sideshow
 
             FILM_QUERY = {
                 :initial_release_date => nil,
-                :rating => {
+                :rating => [{
                     :mid => nil,
                     :name => nil,
+                    :country => "United States of America",
                     :optional => true
-                },
+                }],
                 :runtime => [{
                     :runtime => nil,
                     :type_of_film_cut => nil,
@@ -53,7 +54,7 @@ module Sideshow
 
             def self.all(ids)
                 Ken.session.mqlread([{
-                    :"mid|=" => ids,
+                    :"id|=" => ids,
                     :"type|=" => ["/film/film", "/tv/tv_program"]
                 }.merge(BULK_QUERY)]).map do |data|
                     self.get_instance(data)

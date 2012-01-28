@@ -11,9 +11,9 @@
             <dt>Released</dt>
             <dd><%= format_date(program["initial_release_date"]) %></dd>
 
-            <% unless program["rating"].nil? %>
+            <% unless program["rating"].nil? or program["rating"].empty?%>
                 <dt>Rating</dt>
-                <dd><%= image_tag(program["rating"], 20) %></dd>
+                <dd><%= image_tag(program["rating"][0], 20) %></dd>
             <% end %>
 
             <dt>Runtime</dt>
