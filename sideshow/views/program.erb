@@ -9,7 +9,7 @@
         <dl>
         <% unless program["air_date_of_first_episode"].nil? and program["air_date_of_final_episode"].nil? %>
             <dt>Aired</dt>
-            <dd><%= format_date(program["air_date_of_first_episode"] || "unknown") %> - <%= format_date(program["air_date_of_final_episode"] || "unknown") %></dd>
+            <dd><%= format_date(program["air_date_of_first_episode"]) %> - <%= format_date(program["air_date_of_final_episode"]) %></dd>
         <% end %>
         <% unless program["initial_release_date"].nil? %>
             <dt>Released</dt>

@@ -50,7 +50,10 @@ module Sideshow
 
             def self.get_instance(data)
                 Cache.get("program:#{data["id"]}", 1..7 * 24 * 3600) do
-                    data["type"] = data["type"].find { |t| t == "/film/film" || t == "/tv/tv_program" }
+                    data["type"] = data["type"].find do |t|
+                        t == "/film/film" || t == "/tv/tv_program"
+                    end
+
                     case data["type"]
                         when "/film/film"
                             details = Ken.session.mqlread({
@@ -72,6 +75,8 @@ module Sideshow
                                     :optional => true
                                 }]
                             })
+
+                            details["initial_release_date"] ||= "unknown"
                         when "/tv/tv_program"
                             details = Ken.session.mqlread({
                                 :id => data["id"],
@@ -91,6 +96,9 @@ module Sideshow
                                     :optional => true
                                 }]
                             })
+
+                            details["air_date_of_first_episode"] ||= "unknown"
+                            details["air_date_of_final_episode"] ||= "unknown"
                     end
                     Program.new(data.merge(details))
                 end
