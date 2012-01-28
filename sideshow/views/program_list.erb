@@ -1,10 +1,16 @@
 <ul data-role="listview" data-inset="true">
 <% programs.each do |p| %>
-    <li><a href="<%= resource_url(p[:program]) %>">
-        <%= image_tag(p[:program], 100) %>
-        <h2><%= p[:label] %></h2>
+    <li><a href="<%= resource_url(p) %>">
+        <%= image_tag(p, 100) %>
+        <h2><%= p["name"] %></h2>
         <p>
-            <%= p[:type] %><% unless p[:release_year].nil? %>, Released <%= p[:release_year] %><% end %>
+            <%= p.type_label %>
+            <% unless p["air_date_of_first_episode"].nil? and p["air_date_of_final_episode"].nil? %>
+                Aired <%= format_date(p["air_date_of_first_episode"] || "unknown", "%Y") %> - <%= format_date(p["air_date_of_final_episode"] || "unknown", "%Y") %>
+            <% end %>
+            <% unless p["initial_release_date"].nil? %>
+                Released <%= format_date(p["initial_release_date"], "%Y") %>
+            <% end %>
         </p>
     </a></li>
 <% end %>

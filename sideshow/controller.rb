@@ -1,7 +1,7 @@
 require "sinatra/base"
 
 require_relative "../mplayer/mplayer"
-require_relative "model"
+require_relative "model/model"
 
 module Sideshow
     class Controller < Sinatra::Base

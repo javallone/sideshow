@@ -5,14 +5,11 @@ require "bundler/setup"
 
 require "sinatra/base"
 
-require "ken"
-
 require "net/https"
 require "uri"
 
 require_relative "cache"
-require_relative "util"
-require_relative "model"
+require_relative "model/model"
 
 module Sideshow
     class App < Sinatra::Base
@@ -25,19 +22,35 @@ module Sideshow
             end
 
             if Cache.enabled?
-                Model::Movie.all(:fields => [:resource], :unique => true, :order => nil, :resource.not => nil).each do |m|
-                    Util.program_info(:id => m.resource)
+                resource_ids = Model::Movie.all(:fields => [:resource],
+                    :unique => true,
+                    :order => nil,
+                    :resource.not => nil
+                ).map do |m|
+                    m.resource
                 end
+
+                Model::Program.all(resource_ids)
             end
         end
 
         helpers do
             def resource_url(resource)
-                Util.resource_url(resource)
+                "/program#{resource["id"]}"
             end
 
             def image_tag(resource, height)
-                Util.image_tag(resource, height)
+                url = "/image/#{height}#{resource["id"]}"
+                "<img src=\"#{url}\" alt=\"#{resource["name"]}\" />"
+            end
+
+            def format_date(date, format="%b %e, %Y")
+                begin
+                    t = Time.parse(date)
+                    t.strftime(format)
+                rescue
+                    date
+                end
             end
         end
 
@@ -47,11 +60,12 @@ module Sideshow
                 programs = []
 
                 if movies.length > 0
-                    programs = movies.map do |m|
-                        Util.program_info(:id => m.resource)
+                    resource_ids = movies.map do |m|
+                        m.resource
                     end
-
-                    programs.sort_by! { |i| i[:label].sub(/(^the)\s(.*)$/i, "\\2, \\1") }
+                    programs = Model::Program.all(resource_ids).sort_by do |i|
+                        i["name"].sub(/(^the)\s(.*)$/i, "\\2, \\1")
+                    end
                 end
 
                 erb :index, :locals => {
@@ -74,17 +88,15 @@ module Sideshow
         end
 
         get "/doAdd" do
-            resource = Ken.get(params[:resource])
-
             movie = Model::Movie.get(params[:media])
-            priority = Model::Movie.max(:priority, :conditions => ['resource = ?', resource.id]) || 0
+            priority = Model::Movie.max(:priority, :conditions => ['resource = ?', params[:resource]]) || 0
 
-            movie.resource = resource.id
+            movie.resource = params[:resource]
             movie.description = params[:description]
             movie.priority = priority + 1
             movie.save
 
-            Cache.evict("program:#{resource.id}")
+            Cache.evict("program:#{params[:resource]}")
             Cache.evict("page:program_list")
 
             status 201
@@ -103,27 +115,7 @@ module Sideshow
         get "/doSearch" do
             results = []
             unless params[:search].nil?
-                uri = URI.parse("https://www.googleapis.com/freebase/v1/search?mql_output=%7B%22id%22%3A%5B%5D%7D&type=/film/film&type=/tv/tv_program&query=#{URI.encode_www_form_component(params[:search])}")
-                http = Net::HTTP.new(uri.host, uri.port)
-                http.use_ssl = true
-                http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-
-                request = Net::HTTP::Get.new(uri.request_uri)
-
-                response = http.request(request)
-
-                scores = {}
-                JSON.parse(response.body)["result"].map do |r|
-                    scores[r["id"][0]] = r["relevance:score"]
-                end
-
-                results = Ken.all("id|=" => scores.collect {|k, v| k}).map do |r|
-                    { :score => scores[r.id] }.merge(Util.program_info(:program => r))
-                end
-
-                results.sort! do |a, b|
-                    b[:score] <=> a[:score]
-                end
+                results = Model::Program.search(params[:search])
             end
 
             erb :search_results, :layout => false, :locals => {
@@ -194,17 +186,24 @@ module Sideshow
         end
 
         get %r{/program(/.+)} do |id|
-            info = Util.program_info(:id => id)
+            program = Model::Program.get(id)
 
             erb :program, :locals => {
-                :title => info[:label],
+                :title => program["name"],
                 :active => "",
-                :content_class => "program"
-            }.merge(info)
+                :content_class => "program",
+                :program => program,
+                :movies => program.movies
+            }
         end
 
         get %r{/movies(/.+)} do |id|
-            erb :movie_list, :layout => false, :locals => Util.program_info(:id => id)
+            program = Model::Program.get(id)
+
+            erb :movie_list, :layout => false, :locals => {
+                :program => program,
+                :movies => program.movies
+            }
         end
 
         get %r{/image/(\d+)(/.+)} do |size, id|

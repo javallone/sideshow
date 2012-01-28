@@ -1,20 +1,48 @@
 <div class="ui-body ui-body-a ui-corner-top">
     <div class="cover-art"><%= image_tag(program, 200) %></div>
-    <%= summary %>
-    <a href="http://www.freebase.com/view<%= program.id %>">Full Details</a>
+    <%= program.article %>
+    <a href="http://www.freebase.com/view<%= program["id"] %>">Full Details</a>
 </div>
 
 <div class="ui-grid-a">
     <div class="ui-block-a">
         <dl>
-        <% details.each_pair do |k, v| %>
-            <dt><%= k %></dt>
-            <dd><%= v %></dd>
+        <% unless program["air_date_of_first_episode"].nil? and program["air_date_of_final_episode"].nil? %>
+            <dt>Aired</dt>
+            <dd><%= format_date(program["air_date_of_first_episode"] || "unknown") %> - <%= format_date(program["air_date_of_final_episode"] || "unknown") %></dd>
+        <% end %>
+        <% unless program["initial_release_date"].nil? %>
+            <dt>Released</dt>
+            <dd><%= format_date(program["initial_release_date"]) %></dd>
+        <% end %>
+        <% unless program["rating"].empty? %>
+            <dt>Rating</dt>
+            <dd><%= image_tag(program["rating"][0], 20) %></dd>
+        <% end %>
+        <% unless program["runtime"].empty? %>
+            <dt>Runtime</dt>
+            <dd><%= program["runtime"][0]["runtime"].to_i / 60 %>h<%= program["runtime"][0]["runtime"].to_i % 60 %>m</dd>
+        <% end %>
+        <% unless program["seasons"].nil? %>
+            <dt>Seasons</dt>
+            <dd><%= program["seasons"].length %></dd>
+        <% end %>
+        <% unless program["episodes"].nil? %>
+            <dt>Episodes</dt>
+            <dd><%= program["episodes"].length %></dd>
+        <% end %>
+        <% unless program["genre"].nil? %>
+            <dt>Genres</dt>
+            <dd><ul>
+                <% program["genre"].each do |g| %>
+                    <li><%= g["name"] %></li>
+                <% end %>
+            </ul></dd>
         <% end %>
         </dl>
     </div>
 
-    <div data-movies-for="<%= program.id %>">
+    <div data-movies-for="<%= program["id"] %>">
         <%= erb :movie_list, :layout => false, :locals => { :program => program, :movies => movies } %>
     </div>
 </div>
