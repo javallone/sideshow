@@ -6,6 +6,47 @@ require "json"
 module Sideshow
     module Model
         class Program
+            BULK_QUERY = {
+                :mid => nil,
+                :type => [],
+                :name => nil
+            }
+
+            FILM_QUERY = {
+                :initial_release_date => nil,
+                :rating => {
+                    :mid => nil,
+                    :name => nil,
+                    :optional => true
+                },
+                :runtime => [{
+                    :runtime => nil,
+                    :type_of_film_cut => nil,
+                    :optional => true
+                }],
+                :genre => [{
+                    :name => nil,
+                    :optional => true
+                }]
+            }
+
+            TV_QUERY = {
+                :air_date_of_first_episode => nil,
+                :air_date_of_final_episode => nil,
+                :seasons => {
+                    :return => "count",
+                    :optional => true
+                },
+                :episodes => {
+                    :return => "count",
+                    :optional => true
+                },
+                :genre => [{
+                    :name => nil,
+                    :optional => true
+                }]
+            }
+
             def self.get(id)
                 self.all([id])[0]
             end
@@ -13,11 +54,8 @@ module Sideshow
             def self.all(ids)
                 Ken.session.mqlread([{
                     :"mid|=" => ids,
-                    :"type|=" => ["/film/film", "/tv/tv_program"],
-                    :mid => nil,
-                    :type => [],
-                    :name => nil
-                }]).map do |data|
+                    :"type|=" => ["/film/film", "/tv/tv_program"]
+                }.merge(BULK_QUERY)]).map do |data|
                     self.get_instance(data)
                 end
             end
@@ -58,44 +96,15 @@ module Sideshow
                         when "/film/film"
                             details = Ken.session.mqlread({
                                 :mid => data["mid"],
-                                :type => data["type"],
-                                :initial_release_date => nil,
-                                :rating => {
-                                    :mid => nil,
-                                    :name => nil,
-                                    :optional => true
-                                },
-                                :runtime => [{
-                                    :runtime => nil,
-                                    :type_of_film_cut => nil,
-                                    :optional => true
-                                }],
-                                :genre => [{
-                                    :name => nil,
-                                    :optional => true
-                                }]
-                            })
+                                :type => data["type"]
+                            }.merge(FILM_QUERY))
 
                             details["initial_release_date"] ||= "unknown"
                         when "/tv/tv_program"
                             details = Ken.session.mqlread({
                                 :mid => data["mid"],
-                                :type => data["type"],
-                                :air_date_of_first_episode => nil,
-                                :air_date_of_final_episode => nil,
-                                :seasons => {
-                                    :return => "count",
-                                    :optional => true
-                                },
-                                :episodes => {
-                                    :return => "count",
-                                    :optional => true
-                                },
-                                :genre => [{
-                                    :name => nil,
-                                    :optional => true
-                                }]
-                            })
+                                :type => data["type"]
+                            }.merge(TV_QUERY))
 
                             details["air_date_of_first_episode"] ||= "unknown"
                             details["air_date_of_final_episode"] ||= "unknown"
