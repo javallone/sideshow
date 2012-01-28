@@ -25,8 +25,8 @@ module Sideshow
             def self.search(search)
                 mql = {
                     :id => nil,
-                    :name => nil,
                     :type => []
+                    :name => nil,
                 }
                 uri = URI.parse("https://www.googleapis.com/freebase/v1/search?type=/film/film&type=/tv/tv_program&query=#{URI.encode_www_form_component(search)}&mql_output=#{URI.encode_www_form_component(mql.to_json)}")
                 http = Net::HTTP.new(uri.host, uri.port)
@@ -60,11 +60,11 @@ module Sideshow
                                 :id => data["id"],
                                 :type => data["type"],
                                 :initial_release_date => nil,
-                                :rating => [{
+                                :rating => {
                                     :id => nil,
                                     :name => nil,
                                     :optional => true
-                                }],
+                                },
                                 :runtime => [{
                                     :runtime => nil,
                                     :type_of_film_cut => nil,

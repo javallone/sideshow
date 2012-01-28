@@ -7,30 +7,28 @@
 <div class="ui-grid-a">
     <div class="ui-block-a">
         <dl>
-        <% unless program["air_date_of_first_episode"].nil? and program["air_date_of_final_episode"].nil? %>
-            <dt>Aired</dt>
-            <dd><%= format_date(program["air_date_of_first_episode"]) %> - <%= format_date(program["air_date_of_final_episode"]) %></dd>
-        <% end %>
-        <% unless program["initial_release_date"].nil? %>
+        <% if program["type"] == "/film/film" %>
             <dt>Released</dt>
             <dd><%= format_date(program["initial_release_date"]) %></dd>
-        <% end %>
-        <% unless program["rating"].nil? or program["rating"].empty? %>
-            <dt>Rating</dt>
-            <dd><%= image_tag(program["rating"][0], 20) %></dd>
-        <% end %>
-        <% unless program["runtime"].nil? or program["runtime"].empty? %>
+
+            <% unless program["rating"].nil? %>
+                <dt>Rating</dt>
+                <dd><%= image_tag(program["rating"], 20) %></dd>
+            <% end %>
+
             <dt>Runtime</dt>
             <dd><%= program["runtime"][0]["runtime"].to_i / 60 %>h<%= program["runtime"][0]["runtime"].to_i % 60 %>m</dd>
-        <% end %>
-        <% unless program["seasons"].nil? %>
+        <% elsif program["type"] == "/tv/tv_program" %>
+            <dt>Aired</dt>
+            <dd><%= format_date(program["air_date_of_first_episode"]) %> - <%= format_date(program["air_date_of_final_episode"]) %></dd>
+
             <dt>Seasons</dt>
             <dd><%= program["seasons"] %></dd>
-        <% end %>
-        <% unless program["episodes"].nil? %>
+
             <dt>Episodes</dt>
             <dd><%= program["episodes"] %></dd>
         <% end %>
+
         <% unless program["genre"].nil? or program["genre"].empty? %>
             <dt>Genres</dt>
             <dd><ul>
