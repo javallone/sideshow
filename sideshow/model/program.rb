@@ -54,7 +54,7 @@ module Sideshow
 
             def self.all(ids)
                 Ken.session.mqlread([{
-                    :"id|=" => ids,
+                    :"mid|=" => ids,
                     :"type|=" => ["/film/film", "/tv/tv_program"]
                 }.merge(BULK_QUERY)]).map do |data|
                     self.get_instance(data)
