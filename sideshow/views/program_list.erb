@@ -4,7 +4,7 @@
         <%= image_tag(p, 100) %>
         <h2><%= p["name"] %></h2>
         <p>
-            <%= p.type_label %>
+            <%= p.type_label %>,
             <% unless p["air_date_of_first_episode"].nil? and p["air_date_of_final_episode"].nil? %>
                 Aired <%= format_date(p["air_date_of_first_episode"], "%Y") %> - <%= format_date(p["air_date_of_final_episode"], "%Y") %>
             <% end %>
