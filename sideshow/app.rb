@@ -36,11 +36,11 @@ module Sideshow
 
         helpers do
             def resource_url(resource)
-                "/program#{resource["id"]}"
+                "/program#{resource["mid"]}"
             end
 
             def image_tag(resource, height)
-                url = "/image/#{height}#{resource["id"]}"
+                url = "/image/#{height}#{resource["mid"]}"
                 "<img src=\"#{url}\" alt=\"#{resource["name"]}\" />"
             end
 

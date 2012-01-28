@@ -12,9 +12,9 @@ module Sideshow
 
             def self.all(ids)
                 Ken.session.mqlread([{
-                    :"id|=" => ids,
+                    :"mid|=" => ids,
                     :"type|=" => ["/film/film", "/tv/tv_program"],
-                    :id => nil,
+                    :mid => nil,
                     :type => [],
                     :name => nil
                 }]).map do |data|
@@ -24,9 +24,9 @@ module Sideshow
 
             def self.search(search)
                 mql = {
-                    :id => nil,
-                    :type => []
-                    :name => nil,
+                    :mid => nil,
+                    :type => [],
+                    :name => nil
                 }
                 uri = URI.parse("https://www.googleapis.com/freebase/v1/search?type=/film/film&type=/tv/tv_program&query=#{URI.encode_www_form_component(search)}&mql_output=#{URI.encode_www_form_component(mql.to_json)}")
                 http = Net::HTTP.new(uri.host, uri.port)
@@ -49,7 +49,7 @@ module Sideshow
             end
 
             def self.get_instance(data)
-                Cache.get("program:#{data["id"]}", 1..7 * 24 * 3600) do
+                Cache.get("program:#{data["mid"]}", 1..7 * 24 * 3600) do
                     data["type"] = data["type"].find do |t|
                         t == "/film/film" || t == "/tv/tv_program"
                     end
@@ -57,11 +57,11 @@ module Sideshow
                     case data["type"]
                         when "/film/film"
                             details = Ken.session.mqlread({
-                                :id => data["id"],
+                                :mid => data["mid"],
                                 :type => data["type"],
                                 :initial_release_date => nil,
                                 :rating => {
-                                    :id => nil,
+                                    :mid => nil,
                                     :name => nil,
                                     :optional => true
                                 },
@@ -79,7 +79,7 @@ module Sideshow
                             details["initial_release_date"] ||= "unknown"
                         when "/tv/tv_program"
                             details = Ken.session.mqlread({
-                                :id => data["id"],
+                                :mid => data["mid"],
                                 :type => data["type"],
                                 :air_date_of_first_episode => nil,
                                 :air_date_of_final_episode => nil,
@@ -126,8 +126,8 @@ module Sideshow
             end
 
             def article
-                Cache.get("program:article:#{@data["id"]}", 1..7 * 24 * 3600) do
-                    uri = URI.parse("https://www.googleapis.com/freebase/v1/text#{@data["id"]}?format=html")
+                Cache.get("program:article:#{@data["mid"]}", 1..7 * 24 * 3600) do
+                    uri = URI.parse("https://www.googleapis.com/freebase/v1/text#{@data["mid"]}?format=html")
                     http = Net::HTTP.new(uri.host, uri.port)
                     http.use_ssl = true
                     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -141,7 +141,7 @@ module Sideshow
             end
 
             def movies
-                Movie.all(:resource => @data["id"], :order => [:priority.asc])
+                Movie.all(:resource => @data["mid"], :order => [:priority.asc])
             end
         end
     end

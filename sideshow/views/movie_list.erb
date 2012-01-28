@@ -2,7 +2,7 @@
     <% movies.each do |m| %>
         <a href="/control/play?id=<%= m.id %>" data-role="button" data-theme="b"><%= m.description %></a>
     <% end %>
-    <a href="/add?resource=<%= program["id"] %>" data-rel="dialog" data-role="button" data-theme="a" data-icon="add">
+    <a href="/add?resource=<%= program["mid"] %>" data-rel="dialog" data-role="button" data-theme="a" data-icon="add">
         Add Media
     </a>
 </div>

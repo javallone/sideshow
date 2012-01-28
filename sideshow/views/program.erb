@@ -1,7 +1,7 @@
 <div class="ui-body ui-body-a ui-corner-top">
     <div class="cover-art"><%= image_tag(program, 200) %></div>
     <%= program.article %>
-    <a href="http://www.freebase.com/view<%= program["id"] %>">Full Details</a>
+    <a href="http://www.freebase.com/view<%= program["mid"] %>">Full Details</a>
 </div>
 
 <div class="ui-grid-a">
@@ -40,7 +40,7 @@
         </dl>
     </div>
 
-    <div data-movies-for="<%= program["id"] %>">
+    <div data-movies-for="<%= program["mid"] %>">
         <%= erb :movie_list, :layout => false, :locals => { :program => program, :movies => movies } %>
     </div>
 </div>
