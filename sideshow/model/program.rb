@@ -57,9 +57,20 @@ module Sideshow
                                 :id => data["id"],
                                 :type => data["type"],
                                 :initial_release_date => nil,
-                                :rating => [{}],
-                                :runtime => [{}],
-                                :genre => [{}]
+                                :rating => [{
+                                    :id => nil,
+                                    :name => nil,
+                                    :optional => true
+                                }],
+                                :runtime => [{
+                                    :runtime => nil,
+                                    :type_of_film_cut => nil,
+                                    :optional => true
+                                }],
+                                :genre => [{
+                                    :name => nil,
+                                    :optional => true
+                                }]
                             })
                         when "/tv/tv_program"
                             details = Ken.session.mqlread({
@@ -67,9 +78,18 @@ module Sideshow
                                 :type => data["type"],
                                 :air_date_of_first_episode => nil,
                                 :air_date_of_final_episode => nil,
-                                :seasons => [],
-                                :episodes => [],
-                                :genre => [{}]
+                                :seasons => {
+                                    :return => "count",
+                                    :optional => true
+                                },
+                                :episodes => {
+                                    :return => "count",
+                                    :optional => true
+                                },
+                                :genre => [{
+                                    :name => nil,
+                                    :optional => true
+                                }]
                             })
                     end
                     Program.new(data.merge(details))
