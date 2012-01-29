@@ -51,6 +51,7 @@ GEM
       dm-core (~> 1.2.0)
     do_sqlite3 (0.10.7)
       data_objects (= 0.10.7)
+    eventmachine (0.12.10)
     extlib (0.9.15)
     fastercsv (1.5.4)
     json (1.6.4)
@@ -78,6 +79,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-sqlite-adapter
+  eventmachine
   ken
   rack
   redis
