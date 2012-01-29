@@ -2,6 +2,10 @@
     vertical-align: middle;
 }
 
+.dialog .ui-controlgroup {
+    text-align: center;
+}
+
 /**** Programs ****/
 
 .program .cover-art {
@@ -39,17 +43,7 @@
     list-style-type: none;
 }
 
-/**** Settings Panel ****/
-
-.settings .ui-controlgroup {
-    text-align: center;
-}
-
 /**** Remote Control ****/
-
-.remote {
-    text-align: center;
-}
 
 .remote table {
     margin: 0 auto;

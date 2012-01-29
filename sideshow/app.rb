@@ -102,6 +102,32 @@ module Sideshow
             status 201
         end
 
+        get "/modify" do
+            erb :modify, :layout => :dialog_layout, :locals => {
+                :title => "Modify Media",
+                :content_class => "modify",
+                :movie => Model::Movie.get(params[:id])
+            }
+        end
+
+        get "/doModify" do
+            movie = Model::Movie.get(params[:id])
+            movie.description = params[:description]
+            movie.save
+
+            status 201
+        end
+
+        get "/unlink" do
+            movie = Model::Movie.get(params[:id])
+            movie.priority = nil
+            movie.description = nil
+            movie.resource = nil
+            movie.save
+
+            status 201
+        end
+
         get "/search" do
             Cache.get("page:search", 24 * 3600) do
                 erb :search, :locals => {

@@ -1,6 +1,6 @@
 <div data-role="controlgroup" class="ui-block-b">
     <% movies.each do |m| %>
-        <a href="/control/play?id=<%= m.id %>" data-role="button" data-theme="b"><%= m.description %></a>
+        <a href="/control/play?id=<%= m.id %>" data-hold-href="/modify?id=<%= m.id %>" data-role="button" data-theme="b"><%= m.description %></a>
     <% end %>
     <a href="/add?resource=<%= program["mid"] %>" data-rel="dialog" data-role="button" data-theme="a" data-icon="add">
         Add Media

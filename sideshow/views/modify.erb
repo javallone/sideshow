@@ -1,0 +1,17 @@
+<form action="/doModify" method="get">
+    <input type="hidden" name="id" value="<%= movie.id %>" />
+    <input type="hidden" name="resource" value="<%= movie.resource %>" />
+
+    <div data-role="fieldcontain">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" value="<%= movie.description %>" />
+    </div>
+
+    <p>Using <%= movie.file %></p>
+
+    <div data-role="controlgroup" data-type="horizontal">
+        <button type="submit" data-icon="add" data-theme="b">Update Media</button>
+        <a href="/unlink?id=<%= movie.id %>" data-role="button" data-icon="delete" data-method="ajax" data-resource="<%= movie.resource %>">Remove</a>
+    </div>
+</form>
+
