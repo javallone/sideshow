@@ -26,9 +26,7 @@ module Sideshow
                     :unique => true,
                     :order => nil,
                     :resource.not => nil
-                ).map do |m|
-                    m.resource
-                end
+                ).map(&:resource)
 
                 Model::Program.all(resource_ids)
             end
@@ -262,7 +260,5 @@ module Sideshow
                 end
             end
         end
-
-        run! if app_file == $0
     end
 end
