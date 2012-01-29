@@ -19,6 +19,7 @@ module Mplayer
                 :in => r,
                 :err => "/dev/null")
             nil
+            Process.detach(@process)
             @open = true
         end
 
