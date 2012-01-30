@@ -20,14 +20,16 @@ module Sideshow
             cleaned = data.sub("\n", "").sub("\x0d", "")
 
             case cleaned
-                when "close"
-                    EventMachine.stop_event_loop
                 when "status"
                     status = Controller.mplayer.nil? ? 'stopped' : 'playing'
                     send_data(">>> #{status}\n")
                 else
-                    result = Controller.mplayer.send_command(cleaned)
-                    send_data(">>> #{result}\n")
+                    begin
+                        result = Controller.mplayer.send_command(cleaned)
+                        send_data(">>> #{result}\n")
+                    rescue
+                        send_data(">>> (command '#{cleaned}' failed)\n")
+                    end
             end
         end
     end
